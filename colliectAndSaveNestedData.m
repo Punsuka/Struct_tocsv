@@ -40,10 +40,15 @@ function saveDataToCSV_v2()
     % データの最大長を取得
     maxLength = max(cellfun(@(f) numel(collectedData.(f)), fieldNames));
     
+    % 時間ステップの開始値と刻み幅を設定
+    timeStepStart = 0;
+    timeStepIncrement = 0.001;
+    
     % 時間ステップごとにデータを書き込み
     for i = 1:maxLength
+        currentTime = timeStepStart + (i-1) * timeStepIncrement;
         rowData = cellfun(@(f) getDataAtIndex(collectedData.(f), i), fieldNames, 'UniformOutput', false);
-        fprintf(fid, '%d,%s\n', i, join(rowData, ','));
+        fprintf(fid, '%f,%s\n', currentTime, join(rowData, ','));
     end
     
     fclose(fid);
